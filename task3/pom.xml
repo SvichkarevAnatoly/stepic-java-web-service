@@ -9,6 +9,9 @@
     <version>1.0</version>
 
     <properties>
+        <org.eclipse.jetty.jetty-server.version>9.3.0.M0</org.eclipse.jetty.jetty-server.version>
+        <org.eclipse.jetty.jetty-webapp.version>9.3.0.M0</org.eclipse.jetty.jetty-webapp.version>
+        <com.google.code.gson.gson.version>2.3.1</com.google.code.gson.gson.version>
         <com.h2database.h2.version>1.4.187</com.h2database.h2.version>
         <org.hibernate.hibernate-core.version>4.3.10.Final</org.hibernate.hibernate-core.version>
     </properties>
@@ -48,19 +51,19 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.3.0.M0</version>
+            <version>${org.eclipse.jetty.jetty-server.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.3.0.M0</version>
+            <version>${org.eclipse.jetty.jetty-webapp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.3.1</version>
+            <version>${com.google.code.gson.gson.version}</version>
         </dependency>
 
         <dependency>
