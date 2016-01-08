@@ -24,6 +24,7 @@ public class SignInServlet extends HttpServlet {
         UserDataSet profile = accountService.getUserBySessionId(sessionId);
         if (profile == null) {
             response.setContentType("text/html;charset=utf-8");
+            response.getWriter().println("Unauthorized");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
             Gson gson = new Gson();

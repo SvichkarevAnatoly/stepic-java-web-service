@@ -1,8 +1,6 @@
 package service;
 
-import dao.SessionDAO;
 import dao.UserDAO;
-import datasets.SessionDataSet;
 import datasets.UserDataSet;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,17 +9,23 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AccountService {
     private static final String hibernate_show_sql = "true";
-    private static final String hibernate_hbm2ddl_auto = "create";
+    private static final String hibernate_hbm2ddl_auto = "update";
     private static final String hibernate_username = "test";
     private static final String hibernate_password = "test";
 
     private final SessionFactory sessionFactory;
+    private final Map<String, Long> sessionIdToProfile;
 
     public AccountService() {
         Configuration configuration = getH2Configuration();
         sessionFactory = createSessionFactory(configuration);
+
+        sessionIdToProfile = new HashMap<>();
     }
 
     public long addNewUser(UserDataSet user) {
@@ -43,27 +47,24 @@ public class AccountService {
     }
 
     public UserDataSet getUserBySessionId(String sessionId) {
+        final Long userId = sessionIdToProfile.get(sessionId);
+        if(userId == null){
+            return null;
+        }
         Session session = sessionFactory.openSession();
-        SessionDAO dao = new SessionDAO(session);
-        UserDataSet ds = dao.getUserDataSetBySessionId(sessionId);
+        UserDAO dao = new UserDAO(session);
+        UserDataSet ds = dao.getUserDataSetByUserId(userId);
         session.close();
         return ds;
     }
 
-    public long addSession(long userId, String sessionId) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        SessionDAO dao = new SessionDAO(session);
-        long id = dao.insertSession(userId, sessionId);
-        transaction.commit();
-        session.close();
-        return id;
+    public void addSession(long userId, String sessionId) {
+        sessionIdToProfile.put(sessionId, userId);
     }
 
     private Configuration getH2Configuration() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(UserDataSet.class);
-        configuration.addAnnotatedClass(SessionDataSet.class);
 
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
