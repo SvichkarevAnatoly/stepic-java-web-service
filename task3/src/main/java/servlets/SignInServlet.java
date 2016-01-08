@@ -1,7 +1,7 @@
 package servlets;
 
-import accounts.AccountService;
-import accounts.UserProfile;
+import service.AccountService;
+import datasets.UserDataSet;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
@@ -21,7 +21,7 @@ public class SignInServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         String sessionId = request.getSession().getId();
-        UserProfile profile = accountService.getUserBySessionId(sessionId);
+        UserDataSet profile = accountService.getUserBySessionId(sessionId);
         if (profile == null) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -46,34 +46,20 @@ public class SignInServlet extends HttpServlet {
             return;
         }
 
-        UserProfile profile = accountService.getUserByLogin(login);
-        if (profile == null || !profile.getPass().equals(pass)) {
+        UserDataSet userDataSet = accountService.getUserByLogin(login);
+        if (userDataSet == null || !userDataSet.getPass().equals(pass)) {
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().println("Unauthorized");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        accountService.addSession(request.getSession().getId(), profile);
+        final long userId = userDataSet.getId();
+        final String session = request.getSession().getId();
+        accountService.addSession(userId, session);
+
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().println("Authorized");
         response.setStatus(HttpServletResponse.SC_OK);
-    }
-
-    //sign out
-    public void doDelete(HttpServletRequest request,
-                         HttpServletResponse response) throws ServletException, IOException {
-        String sessionId = request.getSession().getId();
-        UserProfile profile = accountService.getUserBySessionId(sessionId);
-        if (profile == null) {
-            response.setContentType("text/html;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
-            accountService.deleteSession(sessionId);
-            response.setContentType("text/html;charset=utf-8");
-            response.getWriter().println("Goodbye!");
-            response.setStatus(HttpServletResponse.SC_OK);
-        }
-
     }
 }
