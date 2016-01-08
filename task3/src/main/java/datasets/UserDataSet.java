@@ -1,4 +1,4 @@
-package accounts;
+package datasets;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +20,34 @@ public class UserDataSet implements Serializable {
     private String pass;
 
     //Important to Hibernate!
+    @SuppressWarnings("UnusedDeclaration")
     public UserDataSet() {
+    }
+
+    public UserDataSet(String login, String pass) {
+        setId(-1);
+        setLogin(login);
+        setPass(pass);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 
     @Override
