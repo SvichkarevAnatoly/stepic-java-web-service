@@ -23,7 +23,11 @@ import static org.mockito.Mockito.*;
  *         Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
  */
 public class HomePageServletTest {
-    private AccountServerI accountServer = mock(AccountServer.class);
+    private AccountServerI getMockedAccount(int i) {
+        AccountServerI accountServer = mock(AccountServer.class);
+        when(accountServer.getUsersLimit()).thenReturn(i);
+        return accountServer;
+    }
 
     private HttpServletResponse getMockedResponse(StringWriter stringWriter) throws IOException {
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -50,13 +54,14 @@ public class HomePageServletTest {
         final StringWriter stringWriter = new StringWriter();
         HttpServletResponse response = getMockedResponse(stringWriter);
         HttpServletRequest request = getMockedRequest(HomePageServlet.PAGE_URL);
+        AccountServerI accountServer = getMockedAccount(5);
         when(request.getParameter("remove")).thenReturn("");
 
         HomePageServlet homePage = new HomePageServlet(accountServer);
 
         homePage.doGet(request, response);
 
-        assertEquals("Hasta la vista!", stringWriter.toString().trim());
-        verify(accountServer, times(1)).removeUser();
+        assertEquals("5", stringWriter.toString().trim());
+        verify(accountServer, times(0)).removeUser();
     }
 }
