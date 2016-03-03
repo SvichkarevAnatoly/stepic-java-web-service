@@ -27,6 +27,7 @@ import java.lang.management.ManagementFactory;
  *         Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
  */
 public class Main {
+    private final static int USERS_COUNT_DEFAULT = 10;
     static final Logger logger = LogManager.getLogger(Main.class.getName());
 
     public static void main(String[] args) throws Exception {
@@ -40,11 +41,11 @@ public class Main {
 
         logger.info("Starting at http://127.0.0.1:" + portString);
 
-        AccountServerI accountServer = new AccountServer(1);
+        AccountServerI accountServer = new AccountServer(USERS_COUNT_DEFAULT);
 
         AccountServerControllerMBean serverStatistics = new AccountServerController(accountServer);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName name = new ObjectName("ServerManager:type=AccountServerController");
+        ObjectName name = new ObjectName("Admin:type=AccountServerController.usersLimit");
         mbs.registerMBean(serverStatistics, name);
 
         Server server = new Server(port);
