@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * @author a.akbashev
@@ -32,11 +35,26 @@ public class ResourcesPageServlet extends HttpServlet {
         final String filePath = request.getParameter("path");
         logger.info(filePath);
 
+        readFile(filePath);
+
         final TestResource testResourceFromXML = (TestResource) ReadXMLFileSAX.readXML(filePath);
         assert testResourceFromXML != null;
 
         testResource.setAge(testResourceFromXML.getAge());
         testResource.setName(testResourceFromXML.getName());
         logger.info(testResource);
+    }
+
+    private void readFile(String filePath) {
+        try (RandomAccessFile aFile = new RandomAccessFile(filePath, "rw")) {
+            FileChannel inChannel = aFile.getChannel();
+
+            ByteBuffer buf = ByteBuffer.allocate(500);
+            inChannel.read(buf);
+            final String s = new String(buf.array(), "ASCII");
+            System.out.printf(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
