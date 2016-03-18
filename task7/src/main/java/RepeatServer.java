@@ -26,7 +26,7 @@ public class RepeatServer implements Runnable {
         try {
             while (true) {
                 String str = in.readLine();
-                if (str.equals("Bue.")) {
+                if (str.equals("Bye.")) {
                     socket.close();
                     logger.info("Connection close");
                     break;
