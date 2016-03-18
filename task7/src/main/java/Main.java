@@ -10,11 +10,9 @@ public class Main {
     static final Logger logger = LogManager.getLogger(Main.class.getName());
 
     public static void main(String[] args) throws IOException {
-        ServerSocket s = new ServerSocket(PORT);
-        System.out.println("Started: " + s);
-        try {
-            Socket socket = s.accept();
-            try {
+        try (ServerSocket s = new ServerSocket(PORT)) {
+            System.out.println("Started: " + s);
+            try (Socket socket = s.accept()) {
                 System.out.println("Connection accepted: " + socket);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                         socket.getInputStream()));
@@ -29,13 +27,6 @@ public class Main {
                     logger.info(str);
                 }
             }
-            finally {
-                System.out.println("closing...");
-                socket.close();
-            }
-        }
-        finally {
-            s.close();
         }
     }
 }
