@@ -1,5 +1,6 @@
 # stepic-java-web-service
 https://stepic.org/course/Разработка-веб-сервиса-на-Java-(часть-1)-146
+https://stepik.org/course/Разработка-веб-сервиса-на-Java-(часть-2)-186
 
 ## Сертификаты об окончании
 https://stepik.org/certificate/aa254fceee0a49b9e29f4bc5ee9765f97fc23f60.pdf
